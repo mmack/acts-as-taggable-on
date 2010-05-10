@@ -54,7 +54,7 @@ module ActsAsTaggableOn::Taggable
 
         exclude_self = "#{klass.table_name}.id != #{id} AND" if self.class == klass
 
-        klass.scoped({ :select     => "#{klass.table_name}.id, COUNT(#{ActsAsTaggableOn::Tag.table_name}.id) AS count",
+        klass.scoped({ :select     => "#{klass.table_name}.*, COUNT(#{ActsAsTaggableOn::Tag.table_name}.id) AS count",
                        :from       => "#{klass.table_name}, #{ActsAsTaggableOn::Tag.table_name}, #{ActsAsTaggableOn::Tagging.table_name}",
                        :conditions => ["#{exclude_self} #{klass.table_name}.id = #{ActsAsTaggableOn::Tagging.table_name}.taggable_id AND #{ActsAsTaggableOn::Tagging.table_name}.taggable_type = '#{klass.to_s}' AND #{ActsAsTaggableOn::Tagging.table_name}.tag_id = #{ActsAsTaggableOn::Tag.table_name}.id AND #{ActsAsTaggableOn::Tag.table_name}.name IN (?)", tags_to_find],
                        :group      => grouped_column_names_for(klass),
